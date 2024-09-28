@@ -1,5 +1,7 @@
+from decimal import Decimal
+
 class Calculation:
-    def __init__(self, a: float, b: float, operation_name: str, result: float) -> None:
+    def __init__(self, a: Decimal, b: Decimal, operation_name: str, result: Decimal) -> None:
         self.a = a
         self.b = b
         self.operation_name = operation_name
