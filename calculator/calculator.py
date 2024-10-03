@@ -18,12 +18,12 @@ class Calculator:
             operation_func = cls.operations_map[operation_name]
         except KeyError:
             raise ValueError("Error operation")
-        
+
         result = operation_func(a, b)
-        
+
         calculation = Calculation(a, b, operation_name, result)
         cls.history.append(calculation)
-        
+
         return result
 
     @classmethod
