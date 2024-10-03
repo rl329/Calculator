@@ -13,17 +13,17 @@ class Calculations:
 
     @classmethod
     def get_history(cls) -> List[Calculation]:
-        """Retrieve the entire history of calculations."""
+        """View the history of calculations."""
         return cls.history
 
     @classmethod
     def clear_history(cls):
-        """Clear the history of calculations."""
+        """Clear the history."""
         cls.history.clear()
 
     @classmethod
     def get_latest(cls) -> Calculation:
-        """Get the latest calculation. Returns None if there's no history."""
+        """Get latest calculation. Returns None if there's no history."""
         if cls.history:
             return cls.history[-1]
         return None

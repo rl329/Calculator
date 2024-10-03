@@ -2,17 +2,33 @@
 from calculator import Calculator
 
 def test_addition():
-    '''Test that addition function works '''    
-    assert Calculator.add(2,2) == 4
+    """
+
+    Testing the add function.
+
+    """
+    assert Calculator.add(4,3) == 7
 
 def test_subtraction():
-    '''Test that addition function works '''    
-    assert Calculator.subtract(2,2) == 0
+    """
 
-def test_divide():
-    '''Test that division function works '''    
-    assert Calculator.divide(2,2) == 1
+    Testing the subtract function.
+
+    """
+    assert Calculator.subtract(4,3) == 1
 
 def test_multiply():
-    '''Test that multiply function works '''    
+    """
+
+    Testing the multiply function.
+
+    """
     assert Calculator.multiply(2,2) == 4
+
+def test_divide():
+    """
+
+    Testing the divide function
+
+    """
+    assert Calculator.divide(2,2) == 1
