@@ -13,9 +13,8 @@ class AddCommand(Command):
         self.b = b
 
     def execute(self):
-        return self.calculator.add(self.a, self.b)
+        return self.calculator.perform_operation(self.a, self.b, "add")
 
-# Concrete Command for Subtraction
 class SubtractCommand(Command):
     def __init__(self, calculator, a, b):
         self.calculator = calculator
@@ -23,9 +22,8 @@ class SubtractCommand(Command):
         self.b = b
 
     def execute(self):
-        return self.calculator.subtract(self.a, self.b)
+        return self.calculator.perform_operation(self.a, self.b, "subtract")
 
-# Concrete Command for Multiplication
 class MultiplyCommand(Command):
     def __init__(self, calculator, a, b):
         self.calculator = calculator
@@ -33,9 +31,8 @@ class MultiplyCommand(Command):
         self.b = b
 
     def execute(self):
-        return self.calculator.multiply(self.a, self.b)
+        return self.calculator.perform_operation(self.a, self.b, "multiply")
 
-# Concrete Command for Division
 class DivideCommand(Command):
     def __init__(self, calculator, a, b):
         self.calculator = calculator
@@ -43,4 +40,4 @@ class DivideCommand(Command):
         self.b = b
 
     def execute(self):
-        return self.calculator.divide(self.a, self.b)
+        return self.calculator.perform_operation(self.a, self.b, "divide")

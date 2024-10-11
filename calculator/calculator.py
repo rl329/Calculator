@@ -21,7 +21,7 @@ class Calculator:
 
         result = operation_func(a, b)
 
-        calculation = Calculation(a, b, operation_name, result)
+        calculation = Calculation(a, b, operation_func)
         cls.history.append(calculation)
 
         return result
