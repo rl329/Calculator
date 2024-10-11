@@ -3,6 +3,7 @@ import importlib
 import pkgutil
 from calculator.calculator import Calculator
 from decimal import Decimal
+from multiprocessing import Process
 
 # Function to dynamically load commands from the plugins directory
 def load_plugins():
@@ -28,15 +29,16 @@ def show_initial_menu():
 
 # Show the available commands after typing 'menu'
 def show_menu(available_commands):
-    # Specify the desired order of commands
-    command_order = ['add', 'subtract', 'multiply', 'divide']
-
     print("Available commands:")
-    for command in command_order:
-        if f"{command}_command" in available_commands:
-            print(f" - {command}")
+    for command in available_commands:
+        print(f" - {command.replace('_command', '')}")
     print(" - quit (to exit the program)")
 
+# Function to run commands in a separate process
+def run_command(command_cls, calculator, a, b):
+    command = command_cls(calculator, a, b)
+    result = command.execute()
+    print(f"The result of {command_cls.__name__.replace('Command', '')} operation is: {result}")
 
 # REPL (Read-Eval-Print-Loop) function
 def repl():
@@ -68,9 +70,13 @@ def repl():
 
         # Execute the corresponding command class if it exists
         if f"{user_input}_command" in commands:
-            command = commands[f"{user_input}_command"](calculator, a, b)
-            result = command.execute()
-            print(f"The result of {user_input} operation is: {result}")
+            command_cls = commands[f"{user_input}_command"]
+
+            # Run the command in a separate process
+            process = Process(target=run_command, args=(command_cls, calculator, a, b))
+            process.start()
+            process.join()  # Wait for the process to finish before continuing
+
         else:
             print("Invalid command!")
 
