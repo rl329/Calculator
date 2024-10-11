@@ -5,7 +5,7 @@ from calculator.calculator import Calculator
 from decimal import Decimal
 from multiprocessing import Process
 
-# Function to dynamically load commands from the plugins directory
+# Dynamically load commands through plugins
 def load_plugins():
     plugins = {}
     package = 'calculator.plugins'
@@ -21,37 +21,41 @@ def load_plugins():
                 plugins[module_name] = cls  # Register command class by its module name
     return plugins
 
-# Show the menu (initially only the 'menu' option)
+# Show the menu command, will display 'menu' 'quit
 def show_initial_menu():
-    print("Available options:")
-    print(" - menu (to display available commands)")
-    print(" - quit (to exit the program)")
+    print("Options:")
+    print(" - Menu (to display available commands)")
+    print(" - Quit (to exit the program)")
 
-# Show the available commands after typing 'menu'
+# Display available commands after typing 'menu'
 def show_menu(available_commands):
+    # Specify the desired order of commands
+    command_order = ['add', 'subtract', 'multiply', 'divide']
+
     print("Available commands:")
-    for command in available_commands:
-        print(f" - {command.replace('_command', '')}")
-    print(" - quit (to exit the program)")
+    for command in command_order:
+        if f"{command}_command" in available_commands:
+            print(f" - {command}")
+    print(" - Quit (to exit the program)")
 
 # Function to run commands in a separate process
 def run_command(command_cls, calculator, a, b):
     command = command_cls(calculator, a, b)
     result = command.execute()
-    print(f"The result of {command_cls.__name__.replace('Command', '')} operation is: {result}")
+    print(f"The solution for {command_cls.__name__.replace('Command', '')} is: {result}")
 
 # REPL (Read-Eval-Print-Loop) function
 def repl():
     calculator = Calculator()
-    commands = load_plugins()  # Dynamically load commands
+    commands = load_plugins()
 
     # Show the initial menu with 'menu' and 'quit' only
     show_initial_menu()
 
     while True:
-        user_input = input("Enter command (menu or quit): ").strip().lower()
+        user_input = input("Enter Command (Menu or Quit): ").strip().lower()
 
-        # Exit if the user types 'quit'
+        # Exit if user types 'quit'
         if user_input == "quit":
             break
 
