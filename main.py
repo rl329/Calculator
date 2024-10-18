@@ -1,21 +1,29 @@
 import os
+import logging  # Import logging
 import importlib
 import pkgutil
 from calculator.calculator import Calculator
 from decimal import Decimal
 from calculator.command import Command
 from multiprocessing import Process
-from dotenv import load_dotenv  # Import dotenv
+from dotenv import load_dotenv
 
 # Load environment variables from .env
 load_dotenv()
 
-# Access environment variables
-env_name = os.getenv("ENV_NAME", "production")  # Default to 'production' if not set
-api_key = os.getenv("API_KEY")
+# Set up logging configuration
+logging.basicConfig(
+    filename='app.log',  # Save logs to 'app.log'
+    filemode='a',  # Append to the log file (default mode)
+    level=logging.INFO,  # Set logging level (DEBUG, INFO, WARNING, ERROR)
+    format='%(asctime)s - %(levelname)s - %(message)s',  # Log format
+)
 
-print(f"Running in {env_name} mode")
-print(f"Using API key: {api_key}")
+# Log environment info
+env_name = os.getenv("ENV_NAME", "production")
+api_key = os.getenv("API_KEY")
+logging.info(f"Running in {env_name} mode")
+logging.info(f"Using API key: {api_key}")
 
 # Dynamically load commands through plugins
 def load_plugins():
@@ -31,9 +39,11 @@ def load_plugins():
             if isinstance(cls, type) and cls.__name__.endswith('Command'):
                 plugins[module_name] = cls
 
+    logging.info(f"Loaded plugins: {list(plugins.keys())}")
     return plugins
 
 def show_initial_menu():
+    logging.info("Displaying initial menu")
     print("Options:")
     print("menu - Menu (to display available commands)")
     print("quit - Quit (to exit the program)")
@@ -48,6 +58,7 @@ def show_menu(available_commands):
 
 def run_command(command_cls, calculator, a, b):
     result = command_cls(calculator, a, b).execute()
+    logging.info(f"Executed command: {command_cls.__name__} with inputs {a}, {b}")
     print(f"The solution for {command_cls.__name__.replace('Command', '')} is: {result}")
 
 def repl():
@@ -60,6 +71,7 @@ def repl():
         user_input = input("Enter Command (Menu or Quit): ").strip().lower()
 
         if user_input == "quit":
+            logging.info("User exited the program")
             break
         elif user_input == "menu":
             show_menu(commands.keys())
@@ -69,7 +81,7 @@ def repl():
             a = Decimal(input("Enter the first number: "))
             b = Decimal(input("Enter the second number: "))
         except ValueError:
-            print("Invalid input. Please enter numbers.")
+            logging.error("Invalid input. Please enter valid numbers.")
             continue
 
         if f"{user_input}_command" in commands:
@@ -78,6 +90,7 @@ def repl():
             process.start()
             process.join()
         else:
+            logging.warning(f"Invalid command entered: {user_input}")
             print("Invalid command!")
 
 if __name__ == "__main__":

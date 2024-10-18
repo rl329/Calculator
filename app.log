@@ -1,0 +1,6 @@
+2024-10-17 23:38:52,336 - INFO - Running in development mode
+2024-10-17 23:38:52,336 - INFO - Using API key: your-api-key
+2024-10-17 23:38:52,344 - INFO - Loaded plugins: ['add_command', 'divide_command', 'multiply_command', 'subtract_command']
+2024-10-17 23:38:52,344 - INFO - Displaying initial menu
+2024-10-17 23:41:49,240 - INFO - Executed command: AddCommand with inputs 5, 5
+2024-10-17 23:41:57,202 - INFO - User exited the program
