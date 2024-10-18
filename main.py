@@ -6,6 +6,8 @@ from decimal import Decimal
 from multiprocessing import Process
 
 # Dynamically load commands through plugins
+# Trigger GitHub Actions workflow
+
 def load_plugins():
     plugins = {}
     package = 'calculator.plugins'
