@@ -7,6 +7,7 @@ from multiprocessing import Process
 
 # Dynamically load commands through plugins
 # Trigger GitHub Actions workflow
+# Testing workflow trigger
 
 def load_plugins():
     plugins = {}
