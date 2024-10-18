@@ -3,12 +3,21 @@ import importlib
 import pkgutil
 from calculator.calculator import Calculator
 from decimal import Decimal
+from calculator.command import Command
 from multiprocessing import Process
+from dotenv import load_dotenv  # Import dotenv
+
+# Load environment variables from .env
+load_dotenv()
+
+# Access environment variables
+env_name = os.getenv("ENV_NAME", "production")  # Default to 'production' if not set
+api_key = os.getenv("API_KEY")
+
+print(f"Running in {env_name} mode")
+print(f"Using API key: {api_key}")
 
 # Dynamically load commands through plugins
-# Trigger GitHub Actions workflow
-# Testing workflow trigger
-
 def load_plugins():
     plugins = {}
     package = 'calculator.plugins'
@@ -17,57 +26,45 @@ def load_plugins():
     for _, module_name, _ in pkgutil.iter_modules([plugin_path]):
         module = importlib.import_module(f"{package}.{module_name}")
 
-        # Find classes that match the pattern "Command"
         for attr in dir(module):
             cls = getattr(module, attr)
             if isinstance(cls, type) and cls.__name__.endswith('Command'):
-                plugins[module_name] = cls  # Register command class by its module name
+                plugins[module_name] = cls
+
     return plugins
 
-# Show the menu command, will display 'menu' 'quit
 def show_initial_menu():
     print("Options:")
-    print(" - Menu (to display available commands)")
-    print(" - Quit (to exit the program)")
+    print("menu - Menu (to display available commands)")
+    print("quit - Quit (to exit the program)")
 
-# Display available commands after typing 'menu'
 def show_menu(available_commands):
-    # Specify the desired order of commands
     command_order = ['add', 'subtract', 'multiply', 'divide']
-
-    print("Available commands:")
+    print("\nAvailable commands:")
     for command in command_order:
         if f"{command}_command" in available_commands:
-            print(f" - {command}")
-    print(" - Quit (to exit the program)")
+            print(f"- {command}")
+    print("- quit (to exit the program)")
 
-# Function to run commands in a separate process
 def run_command(command_cls, calculator, a, b):
-    command = command_cls(calculator, a, b)
-    result = command.execute()
+    result = command_cls(calculator, a, b).execute()
     print(f"The solution for {command_cls.__name__.replace('Command', '')} is: {result}")
 
-# REPL (Read-Eval-Print-Loop) function
 def repl():
     calculator = Calculator()
     commands = load_plugins()
 
-    # Show the initial menu with 'menu' and 'quit' only
     show_initial_menu()
 
     while True:
         user_input = input("Enter Command (Menu or Quit): ").strip().lower()
 
-        # Exit if user types 'quit'
         if user_input == "quit":
             break
-
-        # If user types 'menu', display all available commands
         elif user_input == "menu":
             show_menu(commands.keys())
             continue
 
-        # Handle math operations after 'menu' is shown
         try:
             a = Decimal(input("Enter the first number: "))
             b = Decimal(input("Enter the second number: "))
@@ -75,15 +72,11 @@ def repl():
             print("Invalid input. Please enter numbers.")
             continue
 
-        # Execute the corresponding command class if it exists
         if f"{user_input}_command" in commands:
             command_cls = commands[f"{user_input}_command"]
-
-            # Run the command in a separate process
             process = Process(target=run_command, args=(command_cls, calculator, a, b))
             process.start()
-            process.join()  # Wait for the process to finish before continuing
-
+            process.join()
         else:
             print("Invalid command!")
 
