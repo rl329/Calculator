@@ -11,3 +11,4 @@
 3. pytest --pylint --cov
 4. pytest --num_records=10
 
+echo "# Test pull request trigger" >> README.md
